@@ -8,9 +8,12 @@ class BaseObject:
         self.height=height
         self.image=image
         self.screen=screen
-
+        self.rect=self.image.get_rect(center=(self.x,self.y))
+    
     def transform(self):
         self.image=pygame.transform.scale(self.image,(self.width,self.height))
+
     def render(self):
-        self.screen.blit(self.image,(self.x,self.y))
-    
+        self.rect=self.image.get_rect(center=(self.x,self.y))
+        self.screen.blit(self.image,self.rect)
+       
