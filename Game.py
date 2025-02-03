@@ -17,7 +17,6 @@ text_space=display_font.render('Space Shooter',False,'Black') #changes the font 
 text_rect=text_space.get_rect(center=(400,50))
 
 
-
 background_y1=int(0)
 background_y2=int(0)
 bg_height=600
