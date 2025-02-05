@@ -8,7 +8,7 @@ class Spaceship(BaseObject):
         super().__init__(screen,200,450,40,60,pygame.image.load('./Assets/ship.png'))
         self.transform()
         self.bullets=[]
-        self.health=100
+        self.health=5
         
     
     def left(self):
@@ -23,8 +23,8 @@ class Spaceship(BaseObject):
     
     def down(self):
         self.y += delta
-        if(self.y>600-self.height/2):
-            self.y=600-self.height/2
+        if(self.y>567-self.height/2):
+            self.y=567-self.height/2
       
     def up(self):
         self.y -= delta

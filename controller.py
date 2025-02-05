@@ -1,3 +1,4 @@
+import Game_Objects.powerup
 import Game_Objects.spaceship
 import Game_Objects.enemies
 import Game_Objects.bullet
@@ -5,12 +6,22 @@ import random
 
 class Controller:
     def __init__(self, screen):
+        self.refill=0
         self.respawn=int(0)
+        self.reappear=int(0)
         self.screen = screen
         self.player = [Game_Objects.spaceship.Spaceship(self.screen)]
-        self.enemy = [Game_Objects.enemies.Enemies(self.screen,random.randint(0,400),-50,0)]
+        self.enemy = [Game_Objects.enemies.Enemies(self.screen,random.randint(0,400),-50,0,self.addBullet)]
+        self.powerup=[Game_Objects.powerup.powerUp(self.screen,random.randint(0,360),random.randint(0,560))]
+        self.bullets=[]
+    
+    def addBullet(self,bullet):
+        self.bullets.append(bullet)
 
     def tick(self):
+        # if(self.reappear==1):
+        #     self.powerup.append(self.screen)
+        self.refill=0
         for i in self.player:
             i.render()
             for j in i.bullets:
@@ -19,18 +30,54 @@ class Controller:
                 j.move()
             if(i.health<=0):
                 self.player.remove(i)
+
         for i in self.enemy:
-            for j in i.bullets:
-                if(j.checkEnemies(self.player)):
-                    i.bullets.remove(j)
+            # for j in i.bullets:
+            #     if(j.checkEnemies(self.player)):
+            #         i.bullets.remove(j)
             i.move()
             if(i.health<=0):
                 self.enemy.remove(i)
                 self.respawn+=1  
-                self.enemy.append(Game_Objects.enemies.Enemies(self.screen,random.randint(0,400),-50,self.respawn))
+                self.enemy.append( Game_Objects.enemies.Enemies(self.screen,random.randint(0,400),-50,self.respawn,self.addBullet))
                 if(self.respawn==5):
                     self.respawn=0
-            i.render()        
+            i.render()
+
+        for i in self.bullets:
+            if i.checkEnemies(self.player):
+               self.bullets.remove(i) 
+            i.move()    
+
+        for i in self.player:
+            for k in i.bullets:
+                for l in self.bullets:
+                    if(k.rect.colliderect(l.rect) ):
+                        i.bullets.remove(k)
+                        self.bullets.remove(l)
+        
+
+            for i in self.player:
+                for j in self.powerup:
+                    if(j.collision(i)):
+                        self.powerup.remove(j)
+                        self.refill+=1
+                        self.reappear=0
+                        self.powerup.append(Game_Objects.powerup.powerUp(self.screen,random.randint(0,360),random.randint(0,560)))
+                    
+                
+                    if(self.reappear==500): 
+            
+                        j.render()
+                    if(self.reappear<500):
+                    
+                        self.reappear+=1
+        return self.refill;    
+    
+                
+                    
+                    
+                    
 
     def eLeft(self):
        for i in self.player:
