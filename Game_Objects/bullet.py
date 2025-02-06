@@ -17,7 +17,7 @@ class Bullet(BaseObject):
     def move(self):
         if(self.dir==-1):
             self.y+=delta
-            if(self.y==567):
+            if(self.y>=550):
                 self.y=700
         else:
             self.y-=delta

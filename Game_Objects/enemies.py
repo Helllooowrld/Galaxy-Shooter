@@ -9,7 +9,8 @@ class Enemies(BaseObject):
         self.height1=40
         self.width2=86.67
         self.height2=100
-        self.health=1
+        self.maxHealth=5
+        self.health=self.maxHealth
         self.x=x
         self.y=y
         self.addBullet=addBullet
@@ -31,8 +32,6 @@ class Enemies(BaseObject):
     
     def move(self):
         self.theta+=0.01
-
-                
         self.y+=3
         if(self.y>=60):
             self.y=60
@@ -43,6 +42,16 @@ class Enemies(BaseObject):
                 if(self.bulletControl<5):
                     self.bulletControl+=1
         self.x=math.sin(self.theta)*(400-self.width)/2+200
-           
+        self.render()
+        self.renderHealth()
+
+    def renderHealth(self):
+        width=60
+        height=7
+        pygame.draw.rect(self.screen,(255,0,0), pygame.Rect(self.x-width/2, self.y-30,width ,height))
+        pygame.draw.rect(self.screen,(0,200,0), pygame.Rect(self.x-width/2+1, self.y-29,(width-2)*self.health/self.maxHealth ,height-2))
+        return 
         
+
+                
     
