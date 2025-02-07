@@ -103,6 +103,7 @@ class Controller:
     def eSpace(self):
           for i in self.player:
            i.shoot()
-    def eShift(self,slowDown):
+    def eShift(self):
         for i in self.player:
-            i.shift()
+            speed=i.shift()
+        return speed

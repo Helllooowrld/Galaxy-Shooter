@@ -11,9 +11,10 @@ class Spaceship(BaseObject):
         self.maxHealth=8
         self.health=self.maxHealth
         self.maxAbility=5
-        self.ability=0
+        self.ability=0.0
         self.ab=0
-        
+      
+      
         
     
     def left(self):
@@ -40,7 +41,16 @@ class Spaceship(BaseObject):
         self.bullets.append(Bullet(self.screen,self.x,self.y,1))
     
     def shift(self):
-        self.ab=1
+        if self.ability <= 0.01:  
+            self.ab=1
+            return 1          
+
+        if self.ability > 0:
+            self.ab = 1
+            return 0.5
+        
+       
+        
      
     def dealDamage(self,damage):
         self.health-=damage  
@@ -54,19 +64,29 @@ class Spaceship(BaseObject):
     def renderAbility(self,delta):
         width=160
         height=15
-        self.ability+=delta
-        if(self.ability>self.maxAbility):
-            self.ability=self.maxAbility
+
+        # if(self.ability>=self.maxAbility):        
+        #     self.ability=self.maxAbility
+        #     pygame.draw.rect(self.screen,(0,0,100), pygame.Rect(400-width-20, 600-height-2,width ,height))
+        #     pygame.draw.rect(self.screen,(0,0,200), pygame.Rect(400-width-20+2, 600-height-2+2,(width-4)*self.ability/self.maxAbility,height-4))
+        
+        if self.ab == 1:
+            self.ability -= 0.02
+            if self.ability < 0:  # Ensure non-negative values
+                self.ability = 0
+
+            self.ab = 0  # Reset flag
+
+        if self.ability < self.maxAbility:
+            self.ability += delta
+            if self.ability > self.maxAbility:
+                self.ability = self.maxAbility 
+
+        
+        
         pygame.draw.rect(self.screen,(0,0,100), pygame.Rect(400-width-20, 600-height-2,width ,height))
-      
-        if( self.ability==self.maxAbility and self.ab==1):
-            
-                self.ability-=1
+        pygame.draw.rect(self.screen,(0,0,200), pygame.Rect(400-width-20+2, 600-height,(width-4)*(self.ability)/self.maxAbility ,height-4))
                
-                # pygame.draw.rect(self.screen,(0,0,200), pygame.Rect(400-width-20+2, 600-height,(width-4)*self.ability/self.maxAbility ,height-4))
-        self.ab=0
-        pygame.draw.rect(self.screen,(0,0,200), pygame.Rect(400-width-20+2, 600-height-2+2,(width-4)*self.ability/self.maxAbility,height-4))
-                
                 
 
 
