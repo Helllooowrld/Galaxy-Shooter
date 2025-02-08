@@ -5,15 +5,17 @@ from Game_Objects.bullet import Bullet
 delta = 10
 class Spaceship(BaseObject):
     def __init__(self,screen):
-        super().__init__(screen,200,450,40,60,pygame.image.load('./Assets/ship.png'))
+        self.x=200
+        self.y=537
+        super().__init__(screen,self.x,self.y,40,60,pygame.image.load('./Assets/ship.png'))
         self.transform()
         self.bullets=[]
-        self.maxHealth=8
+        self.maxHealth=10
         self.health=self.maxHealth
         self.maxAbility=5
         self.ability=0.0
         self.ab=0
-      
+     
       
         
     
@@ -65,17 +67,13 @@ class Spaceship(BaseObject):
         width=160
         height=15
 
-        # if(self.ability>=self.maxAbility):        
-        #     self.ability=self.maxAbility
-        #     pygame.draw.rect(self.screen,(0,0,100), pygame.Rect(400-width-20, 600-height-2,width ,height))
-        #     pygame.draw.rect(self.screen,(0,0,200), pygame.Rect(400-width-20+2, 600-height-2+2,(width-4)*self.ability/self.maxAbility,height-4))
         
         if self.ab == 1:
             self.ability -= 0.02
-            if self.ability < 0:  # Ensure non-negative values
+            if self.ability < 0:  
                 self.ability = 0
 
-            self.ab = 0  # Reset flag
+            self.ab = 0  
 
         if self.ability < self.maxAbility:
             self.ability += delta
@@ -87,7 +85,10 @@ class Spaceship(BaseObject):
         pygame.draw.rect(self.screen,(0,0,100), pygame.Rect(400-width-20, 600-height-2,width ,height))
         pygame.draw.rect(self.screen,(0,0,200), pygame.Rect(400-width-20+2, 600-height,(width-4)*(self.ability)/self.maxAbility ,height-4))
                
-                
-
+    def enemyCollision(self,enemy):
+        if(self.rect.colliderect(enemy.rect)):
+            self.dealDamage(1)
+           
+            self.y+=80
 
         

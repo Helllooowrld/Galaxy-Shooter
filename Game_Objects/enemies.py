@@ -3,16 +3,19 @@ import math
 from Game_Objects.base import BaseObject
 from Game_Objects.bullet import Bullet
 class Enemies(BaseObject):
-    def __init__(self,screen,x,y,respawn,addBullet):
+    def __init__(self,screen,x,y,respawn,fire,addBullet):
         self.screen=screen
         self.width1=80
         self.height1=40
         self.width2=86.67
         self.height2=100
-        self.maxHealth=5
-        self.health=self.maxHealth
+        self.maxHealthSmall=3
+        self.maxHealthBig=15
+        self.healthSmall=self.maxHealthSmall
+        self.healthBig=self.maxHealthBig
         self.x=x
         self.y=y
+        self.fire=fire
         self.addBullet=addBullet
         self.theta=0
         self.image1=pygame.image.load('./Assets/enemy-medium.png')
@@ -27,7 +30,11 @@ class Enemies(BaseObject):
     
    
     def dealDamage(self,damage):
-        self.health-=damage
+        if(self.respawn<5):
+            self.healthSmall-=damage
+        else:
+            self.healthBig-=damage
+
         # print(self.health)
     
     def move(self):
@@ -38,7 +45,10 @@ class Enemies(BaseObject):
             if(self.theta%1<0.2):
                 if(self.bulletControl==5):
                     self.addBullet(Bullet(self.screen,self.x,self.y,-1))
-                    self.bulletControl=-10
+                    if(self.fire==1):
+                        self.bulletControl=-3
+                    else:
+                        self.bulletControl=-10
                 if(self.bulletControl<5):
                     self.bulletControl+=1
         self.x=math.sin(self.theta)*(400-self.width)/2+200
@@ -48,8 +58,12 @@ class Enemies(BaseObject):
     def renderHealth(self):
         width=60
         height=7
-        pygame.draw.rect(self.screen,(255,0,0), pygame.Rect(self.x-width/2, self.y-30,width ,height))
-        pygame.draw.rect(self.screen,(0,200,0), pygame.Rect(self.x-width/2+1, self.y-29,(width-2)*self.health/self.maxHealth ,height-2))
+        if(self.respawn<5):
+            pygame.draw.rect(self.screen,(255,0,0), pygame.Rect(self.x-width/2, self.y-30,width ,height))
+            pygame.draw.rect(self.screen,(0,200,0), pygame.Rect(self.x-width/2+1, self.y-29,(width-2)*self.healthSmall/self.maxHealthSmall ,height-2))
+        else:
+           pygame.draw.rect(self.screen,(255,0,0), pygame.Rect(self.x-width/2, self.y-51,width ,height))
+           pygame.draw.rect(self.screen,(0,200,0), pygame.Rect(self.x-width/2+1, self.y-50,(width-2)*self.healthBig/self.maxHealthBig ,height-2))  
         return 
         
 
